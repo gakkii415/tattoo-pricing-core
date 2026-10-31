@@ -25,9 +25,10 @@ jobs:
       - name: Mandatory checks against the original change base
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          WORK_BRANCH: ${{ github.head_ref || github.ref_name }}
         run: |
-          if [ "$BASE_SHA" = '0000000000000000000000000000000000000000' ] || [ -z "$BASE_SHA" ]; then
-            BASE_SHA=$(git rev-parse HEAD^)
+          if [ "$WORK_BRANCH" != main ]; then
+            BASE_SHA=$(git merge-base HEAD origin/main)
           fi
           python3 .github/mandatory.py --base "$BASE_SHA" --fix
           python3 .github/mandatory.py --base "$BASE_SHA"
