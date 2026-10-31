@@ -1,4 +1,15 @@
 <!doctype html>
-<html lang="ja"><meta charset="utf-8"><title>準備中</title><body><main>準備中</main>
-<!-- app-version:start --><small id="app-version">v1</small><!-- app-version:end -->
-</body></html>
+<html lang="ja">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>共通料金エンジン</title>
+<style>body{font-family:system-ui,sans-serif;max-width:720px;margin:64px auto;padding:0 24px;line-height:1.8;color:#222}h1{font-size:28px}table{border-collapse:collapse;width:100%}th,td{text-align:left;border-bottom:1px solid #ddd;padding:8px}small{color:#777}code{background:#f3f3f3;padding:2px 5px}</style></head>
+<body><main><h1>共通料金エンジン</h1><p>料金設定・計算処理の確定版を配布します。改定案は検討用ブランチで管理し、確定後に利用先へ反映します。</p>
+<p id="status">読み込み中</p><table><thead><tr><th>長辺</th><th>基準料金</th></tr></thead><tbody id="bands"></tbody></table>
+<p><a href="dist/pricing.js">配布用JavaScript</a> · <a href="dist/manifest.json">配布情報</a></p>
+<p id="example"></p></main><footer><!-- app-version:start --><small id="app-version">v2</small><!-- app-version:end --></footer>
+<script src="dist/pricing.js"></script><script>
+const engine=globalThis.MeaPricing;
+document.getElementById('status').textContent=`料金版 ${engine.version} / API ${engine.apiVersion}`;
+document.getElementById('bands').innerHTML=engine.BASE_BANDS.map(b=>`<tr><td>${b.min}〜${b.max}mm</td><td>${b.price.toLocaleString('ja-JP')}円</td></tr>`).join('');
+const example=engine.calculate({long:80,short:50,whitespace:'notApplicable',complexity:'standard',color:'oneToThree'},'artist');
+document.getElementById('example').textContent=example?`動作確認例：80×50mm・標準・1〜3色・余白補正なし → ${example.rounded.toLocaleString('ja-JP')}円`:'';
+</script></body></html>
